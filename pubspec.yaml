@@ -32,6 +32,7 @@ dependencies:
   smooth_star_rating: ^1.1.1
   intl: ^0.16.0
   flutter_svg: ^0.19.2+1
+  fl_chart: ^0.12.1
 
 dev_dependencies:
   flutter_test:

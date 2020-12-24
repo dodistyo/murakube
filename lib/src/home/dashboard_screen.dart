@@ -61,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     listViews.add(
       TitleView(
-        titleTxt: 'Mediterranean diet',
+        titleTxt: 'Kubernetes resources',
         // subTxt: 'Details',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
@@ -165,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: MurakubeAppTheme.k8sBase.withOpacity(topBarOpacity),
+                    color: MurakubeAppTheme.k8sGrey.withOpacity(topBarOpacity),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),

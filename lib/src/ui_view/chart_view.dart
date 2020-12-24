@@ -1,25 +1,20 @@
 import 'package:murakube/src/murakube_app_theme.dart';
-import 'package:murakube/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:fl_chart/fl_chart.dart';
 
-class ChartView extends StatelessWidget {
-  final AnimationController animationController;
-  final Animation animation;
-
-  const ChartView({Key key, this.animationController, this.animation})
-      : super(key: key);
-
+class _PieChartState extends State<ChartView> {
+  int touchedIndex;
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController,
+      animation: widget.animationController,
       builder: (BuildContext context, Widget child) {
         return FadeTransition(
-          opacity: animation,
+          opacity: widget.animation,
           child: new Transform(
             transform: new Matrix4.translationValues(
-                0.0, 30 * (1.0 - animation.value), 0.0),
+                0.0, 30 * (1.0 - widget.animation.value), 0.0),
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 24, right: 24, top: 16, bottom: 18),
@@ -30,7 +25,7 @@ class ChartView extends StatelessWidget {
                       topLeft: Radius.circular(8.0),
                       bottomLeft: Radius.circular(8.0),
                       bottomRight: Radius.circular(8.0),
-                      topRight: Radius.circular(68.0)),
+                      topRight: Radius.circular(8.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
                         color: MurakubeAppTheme.grey.withOpacity(0.2),
@@ -46,293 +41,34 @@ class ChartView extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 4),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 48,
-                                        width: 2,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#87A0E5')
-                                              .withOpacity(0.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4, bottom: 2),
-                                              child: Text(
-                                                'Eaten',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      MurakubeAppTheme.fontName,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                  letterSpacing: -0.1,
-                                                  color: MurakubeAppTheme.grey
-                                                      .withOpacity(0.5),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  width: 28,
-                                                  height: 28,
-                                                  child: Image.asset(
-                                                      "assets/murakube/eaten.png"),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4, bottom: 3),
-                                                  child: Text(
-                                                    '${(1127 * animation.value).toInt()}',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          MurakubeAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16,
-                                                      color: MurakubeAppTheme
-                                                          .darkerText,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4, bottom: 3),
-                                                  child: Text(
-                                                    'Kcal',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          MurakubeAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 12,
-                                                      letterSpacing: -0.2,
-                                                      color: MurakubeAppTheme
-                                                          .grey
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                            child: PieChart(
+                              PieChartData(
+                                  pieTouchData: PieTouchData(
+                                      touchCallback: (pieTouchResponse) {
+                                    setState(() {
+                                      if (pieTouchResponse.touchInput
+                                              is FlLongPressEnd ||
+                                          pieTouchResponse.touchInput
+                                              is FlPanEnd) {
+                                        touchedIndex = -1;
+                                      } else {
+                                        touchedIndex = pieTouchResponse
+                                            .touchedSectionIndex;
+                                      }
+                                    });
+                                  }),
+                                  borderData: FlBorderData(
+                                    show: false,
                                   ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 48,
-                                        width: 2,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#F56E98')
-                                              .withOpacity(0.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4, bottom: 2),
-                                              child: Text(
-                                                'Burned',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      MurakubeAppTheme.fontName,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                  letterSpacing: -0.1,
-                                                  color: MurakubeAppTheme.grey
-                                                      .withOpacity(0.5),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  width: 28,
-                                                  height: 28,
-                                                  child: Image.asset(
-                                                      "assets/murakube/burned.png"),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4, bottom: 3),
-                                                  child: Text(
-                                                    '${(102 * animation.value).toInt()}',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          MurakubeAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16,
-                                                      color: MurakubeAppTheme
-                                                          .darkerText,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8, bottom: 3),
-                                                  child: Text(
-                                                    'Kcal',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          MurakubeAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 12,
-                                                      letterSpacing: -0.2,
-                                                      color: MurakubeAppTheme
-                                                          .grey
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
+                                  sectionsSpace: 0,
+                                  centerSpaceRadius: 0,
+                                  sections: showingSections()),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: Center(
-                              child: Stack(
-                                overflow: Overflow.visible,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 100,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        color: MurakubeAppTheme.white,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0),
-                                        ),
-                                        border: new Border.all(
-                                            width: 4,
-                                            color: MurakubeAppTheme
-                                                .nearlyDarkBlue
-                                                .withOpacity(0.2)),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            '${(1503 * animation.value).toInt()}',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily:
-                                                  MurakubeAppTheme.fontName,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 24,
-                                              letterSpacing: 0.0,
-                                              color: MurakubeAppTheme
-                                                  .nearlyDarkBlue,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Kcal left',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily:
-                                                  MurakubeAppTheme.fontName,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              letterSpacing: 0.0,
-                                              color: MurakubeAppTheme.grey
-                                                  .withOpacity(0.5),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: CustomPaint(
-                                      painter: CurvePainter(
-                                          colors: [
-                                            MurakubeAppTheme.nearlyDarkBlue,
-                                            HexColor("#8A98E8"),
-                                            HexColor("#8A98E8")
-                                          ],
-                                          angle: 140 +
-                                              (360 - 140) *
-                                                  (1.0 - animation.value)),
-                                      child: SizedBox(
-                                        width: 108,
-                                        height: 108,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
+                    // Border
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 24, right: 24, top: 8, bottom: 8),
@@ -344,221 +80,9 @@ class ChartView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 16),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Carbs',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: MurakubeAppTheme.fontName,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    letterSpacing: -0.2,
-                                    color: MurakubeAppTheme.darkText,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Container(
-                                    height: 4,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          HexColor('#87A0E5').withOpacity(0.2),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4.0)),
-                                    ),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          width: ((70 / 1.2) * animation.value),
-                                          height: 4,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(colors: [
-                                              HexColor('#87A0E5'),
-                                              HexColor('#87A0E5')
-                                                  .withOpacity(0.5),
-                                            ]),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(4.0)),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    '12g left',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: MurakubeAppTheme.fontName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      color: MurakubeAppTheme.grey
-                                          .withOpacity(0.5),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Protein',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: MurakubeAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: MurakubeAppTheme.darkText,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Container(
-                                        height: 4,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#F56E98')
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Container(
-                                              width: ((70 / 2) *
-                                                  animationController.value),
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                gradient:
-                                                    LinearGradient(colors: [
-                                                  HexColor('#F56E98')
-                                                      .withOpacity(0.1),
-                                                  HexColor('#F56E98'),
-                                                ]),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(4.0)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        '30g left',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: MurakubeAppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: MurakubeAppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Fat',
-                                      style: TextStyle(
-                                        fontFamily: MurakubeAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: MurakubeAppTheme.darkText,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 0, top: 4),
-                                      child: Container(
-                                        height: 4,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#F1B440')
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Container(
-                                              width: ((70 / 2.5) *
-                                                  animationController.value),
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                gradient:
-                                                    LinearGradient(colors: [
-                                                  HexColor('#F1B440')
-                                                      .withOpacity(0.1),
-                                                  HexColor('#F1B440'),
-                                                ]),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(4.0)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        '10g left',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: MurakubeAppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: MurakubeAppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
                   ],
                 ),
+                // End of border
               ),
             ),
           ),
@@ -566,6 +90,53 @@ class ChartView extends StatelessWidget {
       },
     );
   }
+
+  List<PieChartSectionData> showingSections() {
+    return List.generate(2, (i) {
+      final isTouched = i == touchedIndex;
+      final double fontSize = isTouched ? 20 : 16;
+      final double radius = isTouched ? 110 : 100;
+      final double widgetSize = isTouched ? 55 : 40;
+
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: const Color(0xff0293ee),
+            value: 40,
+            title: '40%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: const Color(0xfff8b250),
+            value: 60,
+            title: '60%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        default:
+          return null;
+      }
+    });
+  }
+}
+
+class ChartView extends StatefulWidget {
+  final AnimationController animationController;
+  final Animation animation;
+
+  const ChartView({Key key, this.animationController, this.animation})
+      : super(key: key);
+
+  @override
+  _PieChartState createState() => new _PieChartState();
 }
 
 class CurvePainter extends CustomPainter {

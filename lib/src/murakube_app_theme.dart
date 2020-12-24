@@ -6,6 +6,7 @@ class MurakubeAppTheme {
   static const Color white = Color(0xFFFFFFFF);
   static const Color background = Color(0xFFF2F3F8);
   static const Color k8sBase = Color(0xFF326DE6);
+  static const Color k8sGrey = Color(0xFF464E51);
   static const Color nearlyDarkBlue = Color(0xFF2633C5);
 
   static const Color nearlyBlue = Color(0xFF00B6F0);
