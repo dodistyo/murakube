@@ -59,17 +59,17 @@ class _DashboardScreenState extends State<DashboardScreen>
   void addAllListData() {
     const int count = 9;
 
-    listViews.add(
-      TitleView(
-        titleTxt: 'Kubernetes resources',
-        // subTxt: 'Details',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Kubernetes resources',
+    //     // subTxt: 'Details',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController,
+    //         curve:
+    //             Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController,
+    //   ),
+    // );
     listViews.add(
       ChartView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -239,7 +239,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   //   ),
                                   // ),
                                   Text(
-                                    'k8s dashboard',
+                                    'dashboard',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       fontFamily: MurakubeAppTheme.fontName,

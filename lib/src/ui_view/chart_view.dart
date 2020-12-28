@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 class _PieChartState extends State<ChartView> {
   int touchedIndex;
+  final int count = 9;
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -18,6 +19,7 @@ class _PieChartState extends State<ChartView> {
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 24, right: 24, top: 16, bottom: 18),
+              // This is the parent Card
               child: Container(
                 decoration: BoxDecoration(
                   color: MurakubeAppTheme.white,
@@ -38,34 +40,16 @@ class _PieChartState extends State<ChartView> {
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 16, left: 16, right: 16),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: PieChart(
-                              PieChartData(
-                                  pieTouchData: PieTouchData(
-                                      touchCallback: (pieTouchResponse) {
-                                    setState(() {
-                                      if (pieTouchResponse.touchInput
-                                              is FlLongPressEnd ||
-                                          pieTouchResponse.touchInput
-                                              is FlPanEnd) {
-                                        touchedIndex = -1;
-                                      } else {
-                                        touchedIndex = pieTouchResponse
-                                            .touchedSectionIndex;
-                                      }
-                                    });
-                                  }),
-                                  borderData: FlBorderData(
-                                    show: false,
-                                  ),
-                                  sectionsSpace: 0,
-                                  centerSpaceRadius: 0,
-                                  sections: showingSections()),
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        "Kubernetes Resources",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: MurakubeAppTheme.fontName,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          letterSpacing: 0.5,
+                          color: MurakubeAppTheme.lightText,
+                        ),
                       ),
                     ),
                     // Border
@@ -80,9 +64,82 @@ class _PieChartState extends State<ChartView> {
                         ),
                       ),
                     ),
+                    // End of Border
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 16, left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                              child: Container(
+                            // color: Colors.blue[300],
+                            height: 200,
+                            child: Transform.scale(
+                              scale: 0.75,
+                              child: PieChart(
+                                PieChartData(
+                                    pieTouchData: PieTouchData(
+                                        touchCallback: (pieTouchResponse) {
+                                      setState(() {
+                                        if (pieTouchResponse.touchInput
+                                                is FlLongPressEnd ||
+                                            pieTouchResponse.touchInput
+                                                is FlPanEnd) {
+                                          touchedIndex = -1;
+                                        } else {
+                                          touchedIndex = pieTouchResponse
+                                              .touchedSectionIndex;
+                                        }
+                                      });
+                                    }),
+                                    startDegreeOffset: 270,
+                                    borderData: FlBorderData(
+                                      show: false,
+                                    ),
+                                    sectionsSpace: 0,
+                                    centerSpaceRadius: 0,
+                                    sections: showingSections()),
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: Container(
+                            // color: Colors.green[300],
+                            height: 200,
+                            child: Transform.scale(
+                              scale: 0.75,
+                              child: PieChart(
+                                PieChartData(
+                                    pieTouchData: PieTouchData(
+                                        touchCallback: (pieTouchResponse) {
+                                      setState(() {
+                                        if (pieTouchResponse.touchInput
+                                                is FlLongPressEnd ||
+                                            pieTouchResponse.touchInput
+                                                is FlPanEnd) {
+                                          touchedIndex = -1;
+                                        } else {
+                                          touchedIndex = pieTouchResponse
+                                              .touchedSectionIndex;
+                                        }
+                                      });
+                                    }),
+                                    borderData: FlBorderData(
+                                      show: false,
+                                    ),
+                                    startDegreeOffset: 270,
+                                    sectionsSpace: 0,
+                                    centerSpaceRadius: 0,
+                                    sections: showingSections()),
+                              ),
+                            ),
+                          )),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                // End of border
               ),
             ),
           ),
@@ -101,9 +158,9 @@ class _PieChartState extends State<ChartView> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: const Color(0xff0293ee),
-            value: 40,
-            title: '40%',
+            color: Colors.red,
+            value: 10,
+            title: '10%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -112,9 +169,9 @@ class _PieChartState extends State<ChartView> {
           );
         case 1:
           return PieChartSectionData(
-            color: const Color(0xfff8b250),
-            value: 60,
-            title: '60%',
+            color: const Color(0xff00C752),
+            value: 90,
+            title: '90 %',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,

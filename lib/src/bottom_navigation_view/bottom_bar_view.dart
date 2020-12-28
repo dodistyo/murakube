@@ -53,14 +53,14 @@ class _BottomBarViewState extends State<BottomBarView>
                                 parent: animationController,
                                 curve: Curves.fastOutSlowIn))
                             .value *
-                        38.0),
+                        32.0),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
                       height: 62,
                       child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 8, right: 8, top: 4),
+                        padding: const EdgeInsets.only(
+                            left: 8, right: 8, top: 2, bottom: 2),
                         child: Row(
                           children: <Widget>[
                             Expanded(
