@@ -1,7 +1,7 @@
 import 'package:murakube/src/models/tabIcon_data.dart';
 import 'package:murakube/src/sample/sample_screen.dart';
 import 'package:flutter/material.dart';
-import 'bottom_navigation_view/bottom_bar_view.dart';
+import 'navigation_view/bottom_bar_view.dart';
 import 'murakube_app_theme.dart';
 import 'home/dashboard_screen.dart';
 

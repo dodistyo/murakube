@@ -1,10 +1,8 @@
 import 'dart:math' as math;
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:murakube/src/models/tabIcon_data.dart';
-import 'package:murakube/main.dart';
 import 'package:flutter/material.dart';
 
-import '../../main.dart';
 import '../models/tabIcon_data.dart';
 
 class BottomBarView extends StatefulWidget {
@@ -45,7 +43,7 @@ class _BottomBarViewState extends State<BottomBarView>
             return Transform(
               transform: Matrix4.translationValues(0.0, 0.0, 0.0),
               child: PhysicalShape(
-                color: MurakubeAppTheme.k8sGrey,
+                color: MurakubeAppTheme.nearlyWhite,
                 elevation: 16.0,
                 clipper: TabClipper(
                     radius: Tween<double>(begin: 0.0, end: 1.0)
@@ -53,7 +51,7 @@ class _BottomBarViewState extends State<BottomBarView>
                                 parent: animationController,
                                 curve: Curves.fastOutSlowIn))
                             .value *
-                        32.0),
+                        38.0),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
