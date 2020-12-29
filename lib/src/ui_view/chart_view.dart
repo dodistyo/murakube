@@ -18,7 +18,7 @@ class _PieChartState extends State<ChartView> {
                 0.0, 30 * (1.0 - widget.animation.value), 0.0),
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 16, bottom: 18),
+                  left: 24, right: 24, top: 0, bottom: 18),
               // This is the parent Card
               child: Container(
                 decoration: BoxDecoration(
@@ -38,8 +38,8 @@ class _PieChartState extends State<ChartView> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 16, left: 16, right: 16),
+                      padding: const EdgeInsets.only(
+                          top: 16, left: 16, right: 16, bottom: 0),
                       child: Text(
                         "Kubernetes Resources",
                         textAlign: TextAlign.center,
@@ -55,7 +55,7 @@ class _PieChartState extends State<ChartView> {
                     // Border
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 8),
+                          left: 24, right: 24, top: 8, bottom: 0),
                       child: Container(
                         height: 2,
                         decoration: BoxDecoration(
@@ -66,75 +66,111 @@ class _PieChartState extends State<ChartView> {
                     ),
                     // End of Border
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 16, left: 16, right: 16),
+                      padding: const EdgeInsets.only(
+                          top: 0, left: 16, right: 16, bottom: 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
+                              child: Column(children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
                               child: Container(
-                            // color: Colors.blue[300],
-                            height: 200,
-                            child: Transform.scale(
-                              scale: 0.75,
-                              child: PieChart(
-                                PieChartData(
-                                    pieTouchData: PieTouchData(
-                                        touchCallback: (pieTouchResponse) {
-                                      setState(() {
-                                        if (pieTouchResponse.touchInput
-                                                is FlLongPressEnd ||
-                                            pieTouchResponse.touchInput
-                                                is FlPanEnd) {
-                                          touchedIndex = -1;
-                                        } else {
-                                          touchedIndex = pieTouchResponse
-                                              .touchedSectionIndex;
-                                        }
-                                      });
-                                    }),
-                                    startDegreeOffset: 270,
-                                    borderData: FlBorderData(
-                                      show: false,
-                                    ),
-                                    sectionsSpace: 0,
-                                    centerSpaceRadius: 0,
-                                    sections: showingSections()),
+                                height: 200,
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: PieChart(
+                                    PieChartData(
+                                        pieTouchData: PieTouchData(
+                                            touchCallback: (pieTouchResponse) {
+                                          setState(() {
+                                            if (pieTouchResponse.touchInput
+                                                    is FlLongPressEnd ||
+                                                pieTouchResponse.touchInput
+                                                    is FlPanEnd) {
+                                              touchedIndex = -1;
+                                            } else {
+                                              touchedIndex = pieTouchResponse
+                                                  .touchedSectionIndex;
+                                            }
+                                          });
+                                        }),
+                                        startDegreeOffset: 270,
+                                        borderData: FlBorderData(
+                                          show: false,
+                                        ),
+                                        sectionsSpace: 0,
+                                        centerSpaceRadius: 0,
+                                        sections: showingSections()),
+                                  ),
+                                ),
                               ),
                             ),
-                          )),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                "Deployment",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: MurakubeAppTheme.fontName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  letterSpacing: 0.5,
+                                  color: MurakubeAppTheme.lightText,
+                                ),
+                              ),
+                            ),
+                          ])),
                           Expanded(
+                              child: Column(children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
                               child: Container(
-                            // color: Colors.green[300],
-                            height: 200,
-                            child: Transform.scale(
-                              scale: 0.75,
-                              child: PieChart(
-                                PieChartData(
-                                    pieTouchData: PieTouchData(
-                                        touchCallback: (pieTouchResponse) {
-                                      setState(() {
-                                        if (pieTouchResponse.touchInput
-                                                is FlLongPressEnd ||
-                                            pieTouchResponse.touchInput
-                                                is FlPanEnd) {
-                                          touchedIndex = -1;
-                                        } else {
-                                          touchedIndex = pieTouchResponse
-                                              .touchedSectionIndex;
-                                        }
-                                      });
-                                    }),
-                                    borderData: FlBorderData(
-                                      show: false,
-                                    ),
-                                    startDegreeOffset: 270,
-                                    sectionsSpace: 0,
-                                    centerSpaceRadius: 0,
-                                    sections: showingSections()),
+                                height: 200,
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: PieChart(
+                                    PieChartData(
+                                        pieTouchData: PieTouchData(
+                                            touchCallback: (pieTouchResponse) {
+                                          setState(() {
+                                            if (pieTouchResponse.touchInput
+                                                    is FlLongPressEnd ||
+                                                pieTouchResponse.touchInput
+                                                    is FlPanEnd) {
+                                              touchedIndex = -1;
+                                            } else {
+                                              touchedIndex = pieTouchResponse
+                                                  .touchedSectionIndex;
+                                            }
+                                          });
+                                        }),
+                                        startDegreeOffset: 270,
+                                        borderData: FlBorderData(
+                                          show: false,
+                                        ),
+                                        sectionsSpace: 0,
+                                        centerSpaceRadius: 0,
+                                        sections: showingSections()),
+                                  ),
+                                ),
                               ),
                             ),
-                          )),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                "Statefulset",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: MurakubeAppTheme.fontName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  letterSpacing: 0.5,
+                                  color: MurakubeAppTheme.lightText,
+                                ),
+                              ),
+                            ),
+                          ])),
                         ],
                       ),
                     ),
