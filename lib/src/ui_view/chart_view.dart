@@ -1,4 +1,5 @@
-import 'package:murakube/src/models/deployment.dart';
+import 'package:murakube/src/models/workload/deployment.dart';
+import 'package:murakube/src/models/workload/statfulset.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -8,10 +9,12 @@ class _PieChartState extends State<ChartView> {
   int touchedIndex;
   final int count = 9;
   Future<Deployment> _futureDeployment;
+  Future<Statefulset> _futureStatefulset;
 
   @override
   void initState() {
     _futureDeployment = ServiceManager().getDeployment();
+    _futureStatefulset = ServiceManager().getStatefulset();
     super.initState();
   }
 
@@ -118,8 +121,9 @@ class _PieChartState extends State<ChartView> {
                                               ),
                                               sectionsSpace: 0,
                                               centerSpaceRadius: 0,
-                                              sections: showingSections(
-                                                  snapshot.data)),
+                                              sections:
+                                                  showingSectionsDeployment(
+                                                      snapshot.data)),
                                         );
                                       } else {
                                         return Center(
@@ -145,56 +149,72 @@ class _PieChartState extends State<ChartView> {
                               ),
                             ),
                           ])),
-                          //   Expanded(
-                          //       child: Column(children: <Widget>[
-                          //     Padding(
-                          //       padding: const EdgeInsets.all(0),
-                          //       child: Container(
-                          //         height: 200,
-                          //         child: Transform.scale(
-                          //           scale: 0.75,
-                          //           child: PieChart(
-                          //             PieChartData(
-                          //                 pieTouchData: PieTouchData(
-                          //                     touchCallback: (pieTouchResponse) {
-                          //                   setState(() {
-                          //                     if (pieTouchResponse.touchInput
-                          //                             is FlLongPressEnd ||
-                          //                         pieTouchResponse.touchInput
-                          //                             is FlPanEnd) {
-                          //                       touchedIndex = -1;
-                          //                     } else {
-                          //                       touchedIndex = pieTouchResponse
-                          //                           .touchedSectionIndex;
-                          //                     }
-                          //                   });
-                          //                 }),
-                          //                 startDegreeOffset: 270,
-                          //                 borderData: FlBorderData(
-                          //                   show: false,
-                          //                 ),
-                          //                 sectionsSpace: 0,
-                          //                 centerSpaceRadius: 0,
-                          //                 sections: showingSections()),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Padding(
-                          //       padding: const EdgeInsets.only(bottom: 16),
-                          //       child: Text(
-                          //         "Statefulset",
-                          //         textAlign: TextAlign.center,
-                          //         style: TextStyle(
-                          //           fontFamily: MurakubeAppTheme.fontName,
-                          //           fontWeight: FontWeight.normal,
-                          //           fontSize: 16,
-                          //           letterSpacing: 0.5,
-                          //           color: MurakubeAppTheme.lightText,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ])),
+                          Expanded(
+                              child: Column(children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                height: 200,
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: FutureBuilder(
+                                    future: _futureStatefulset,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return PieChart(
+                                          PieChartData(
+                                              pieTouchData: PieTouchData(
+                                                  touchCallback:
+                                                      (pieTouchResponse) {
+                                                setState(() {
+                                                  if (pieTouchResponse
+                                                              .touchInput
+                                                          is FlLongPressEnd ||
+                                                      pieTouchResponse
+                                                              .touchInput
+                                                          is FlPanEnd) {
+                                                    touchedIndex = -1;
+                                                  } else {
+                                                    touchedIndex =
+                                                        pieTouchResponse
+                                                            .touchedSectionIndex;
+                                                  }
+                                                });
+                                              }),
+                                              startDegreeOffset: 270,
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              sectionsSpace: 0,
+                                              centerSpaceRadius: 0,
+                                              sections:
+                                                  showingSectionsStatefulset(
+                                                      snapshot.data)),
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                "Statefulset",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: MurakubeAppTheme.fontName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  letterSpacing: 0.5,
+                                  color: MurakubeAppTheme.lightText,
+                                ),
+                              ),
+                            ),
+                          ])),
                         ],
                       ),
                     ),
@@ -208,20 +228,20 @@ class _PieChartState extends State<ChartView> {
     );
   }
 
-  List<PieChartSectionData> showingSections(Deployment depStatus) {
+  List<PieChartSectionData> showingSectionsDeployment(Deployment deployment) {
     return List.generate(2, (i) {
       final isTouched = i == touchedIndex;
       final double fontSize = isTouched ? 20 : 16;
       final double radius = isTouched ? 110 : 100;
-      final double widgetSize = isTouched ? 55 : 40;
-      final double failedDeployment = 10;
 
       switch (i) {
         case 0:
           return PieChartSectionData(
             color: Colors.red,
-            value: depStatus.status.failed,
-            title: depStatus.status.failed.toInt().toString(),
+            value: deployment.status.failed,
+            title: (deployment.status.failed > 0)
+                ? deployment.status.failed.toInt().toString()
+                : '',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -231,8 +251,50 @@ class _PieChartState extends State<ChartView> {
         case 1:
           return PieChartSectionData(
             color: const Color(0xff00C752),
-            value: depStatus.status.running,
-            title: depStatus.status.running.toInt().toString(),
+            value: deployment.status.running,
+            title: (deployment.status.running > 0)
+                ? deployment.status.running.toInt().toString()
+                : '',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        default:
+          return null;
+      }
+    });
+  }
+
+  List<PieChartSectionData> showingSectionsStatefulset(
+      Statefulset statefulset) {
+    return List.generate(2, (i) {
+      final isTouched = i == touchedIndex;
+      final double fontSize = isTouched ? 20 : 16;
+      final double radius = isTouched ? 110 : 100;
+
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: Colors.red,
+            value: statefulset.status.failed,
+            title: (statefulset.status.failed > 0)
+                ? statefulset.status.failed.toInt().toString()
+                : '',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: const Color(0xff00C752),
+            value: statefulset.status.running,
+            title: (statefulset.status.running > 0)
+                ? statefulset.status.running.toInt().toString()
+                : '',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,

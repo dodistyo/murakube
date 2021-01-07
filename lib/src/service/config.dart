@@ -1,6 +1,7 @@
 class Config {
   final String apiEndpoint = "https://k8s.unsircle.id";
   final String apiPrefix = "/api/v1";
+  final String defaultNamespace = "production";
 
   String get apiURL {
     return apiEndpoint + apiPrefix;
