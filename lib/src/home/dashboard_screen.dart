@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:murakube/src/ui_view/chart_view.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   double topBarOpacity = 0.0;
 
   Color k8sTextColor = MurakubeAppTheme.k8sBase;
+
+  final GlobalKey<PieChartState> _key = GlobalKey();
 
   @override
   void initState() {
@@ -56,10 +59,19 @@ class _DashboardScreenState extends State<DashboardScreen>
     super.initState();
   }
 
+  Future<Null> refreshDasboard() async {
+    _key.currentState.refreshDashboard();
+  }
+
+  methodInParent() => Fluttertoast.showToast(
+      msg: "Method called in parent", gravity: ToastGravity.CENTER);
+
   void addAllListData() {
     const int count = 9;
     listViews.add(
       ChartView(
+        key: _key,
+        function: methodInParent,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
@@ -101,20 +113,24 @@ class _DashboardScreenState extends State<DashboardScreen>
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-          return ListView.builder(
-            controller: scrollController,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
+          return RefreshIndicator(
+            onRefresh: refreshDasboard,
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              padding: EdgeInsets.only(
+                top: AppBar().preferredSize.height +
+                    MediaQuery.of(context).padding.top +
+                    24,
+                bottom: 62 + MediaQuery.of(context).padding.bottom,
+              ),
+              itemCount: listViews.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext context, int index) {
+                widget.animationController.forward();
+                return listViews[index];
+              },
             ),
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
-              return listViews[index];
-            },
           );
         }
       },

@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:murakube/src/models/workload/deployment.dart';
 import 'package:murakube/src/models/workload/statfulset.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
@@ -5,11 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:murakube/src/service/service_manager.dart';
 
-class _PieChartState extends State<ChartView> {
+class PieChartState extends State<ChartView> {
   int touchedIndex;
   final int count = 9;
   Future<Deployment> _futureDeployment;
   Future<Statefulset> _futureStatefulset;
+
+  refreshDashboard() {
+    Fluttertoast.showToast(msg: "Refreshed");
+    setState(() {
+      _futureDeployment = ServiceManager().getDeployment();
+      _futureStatefulset = ServiceManager().getStatefulset();
+    });
+  }
 
   @override
   void initState() {
@@ -311,10 +320,11 @@ class _PieChartState extends State<ChartView> {
 class ChartView extends StatefulWidget {
   final AnimationController animationController;
   final Animation animation;
+  final Function function;
 
-  const ChartView({Key key, this.animationController, this.animation})
+  ChartView({Key key, this.animationController, this.animation, this.function})
       : super(key: key);
 
   @override
-  _PieChartState createState() => new _PieChartState();
+  PieChartState createState() => new PieChartState();
 }
