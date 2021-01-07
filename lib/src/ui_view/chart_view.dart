@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:murakube/src/models/deployment.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'dart:io';
-import 'package:murakube/src/service/dashboard.dart';
+import 'package:murakube/src/service/service_manager.dart';
 
 class _PieChartState extends State<ChartView> {
   int touchedIndex;
@@ -14,7 +11,7 @@ class _PieChartState extends State<ChartView> {
 
   @override
   void initState() {
-    _futureDeployment = fetchDeployment();
+    _futureDeployment = ServiceManager().getDeployment();
     super.initState();
   }
 
