@@ -4,7 +4,7 @@ import 'package:murakube/src/models/workload/statfulset.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:murakube/src/service/service_manager.dart';
+import 'package:murakube/src/services/service_manager.dart';
 
 class PieChartState extends State<ChartView> {
   int touchedIndex;

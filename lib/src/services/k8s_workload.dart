@@ -10,7 +10,6 @@ import 'config.dart';
 class Workload {
   final String apiURL = Config().apiURL;
   final String namespace = Config().defaultNamespace;
-  final Map<String, String> baseHeader = Config().baseHeaders;
   final HttpClient client = new HttpClient()
     ..badCertificateCallback = ((X509Certificate cert, String host, int port) =>
         true); //Config to ignore ssl certificate exception
@@ -24,7 +23,7 @@ class Workload {
   //Get Deployment from API
   Future<Deployment> fetchDeployment() async {
     http.Response resp = await ioClient.get(apiURL + '/deployment/' + namespace,
-        headers: baseHeader);
+        headers: await Config().baseHeaders());
     final json = jsonDecode(resp.body);
     final res = Deployment.fromJson(json);
     return res;
@@ -32,8 +31,9 @@ class Workload {
 
   //Get Statefulset from API
   Future<Statefulset> fetchStatefulset() async {
-    http.Response resp = await ioClient
-        .get(apiURL + '/statefulset/' + namespace, headers: baseHeader);
+    http.Response resp = await ioClient.get(
+        apiURL + '/statefulset/' + namespace,
+        headers: await Config().baseHeaders());
     final json = jsonDecode(resp.body);
     final res = Statefulset.fromJson(json);
     return res;

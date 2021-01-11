@@ -1,16 +1,18 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:murakube/src/models/tabIcon_data.dart';
 import 'package:murakube/src/sample/sample_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:murakube/src/screens/login.dart';
 import 'navigation_view/bottom_bar_view.dart';
 import 'murakube_app_theme.dart';
-import 'home/dashboard_screen.dart';
+import 'screens/home/dashboard.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
-  _IndexScreenState createState() => _IndexScreenState();
+  IndexScreenState createState() => IndexScreenState();
 }
 
-class _IndexScreenState extends State<IndexScreen>
+class IndexScreenState extends State<IndexScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
@@ -19,6 +21,9 @@ class _IndexScreenState extends State<IndexScreen>
   Widget tabBody = Container(
     color: MurakubeAppTheme.background,
   );
+
+  Widget tabLogin;
+  bool loggedIn = false;
 
   @override
   void initState() {
@@ -29,7 +34,8 @@ class _IndexScreenState extends State<IndexScreen>
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
-    tabBody = DashboardScreen(animationController: animationController);
+    // tabBody = DashboardScreen(animationController: animationController);
+    // tabLogin = LoginScreen();
     super.initState();
   }
 
@@ -39,34 +45,37 @@ class _IndexScreenState extends State<IndexScreen>
     super.dispose();
   }
 
+  Widget screen() {
+    if (!loggedIn) {
+      return tabBody = LoginScreen();
+    } else {
+      return tabBody =
+          DashboardScreen(animationController: animationController);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: MurakubeAppTheme.background,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: FutureBuilder<bool>(
-          future: getData(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            } else {
-              return Stack(
-                children: <Widget>[
-                  tabBody,
-                  bottomBar(),
-                ],
-              );
-            }
-          },
-        ),
-      ),
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: <Widget>[
+              screen(),
+              // bottomBar(),
+            ],
+          )),
     );
   }
 
   Future<bool> getData() async {
     await Future<dynamic>.delayed(const Duration(milliseconds: 200));
     return true;
+  }
+
+  void actionRedirectHome() async {
+    Fluttertoast.showToast(msg: "Parent method called");
   }
 
   Widget bottomBar() {

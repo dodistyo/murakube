@@ -1,5 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:murakube/src/ui_view/chart_view.dart';
+import 'package:murakube/src/components/chart_view.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:murakube/src/navigation_view/top_bar_view.dart';

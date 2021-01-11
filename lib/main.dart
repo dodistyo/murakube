@@ -24,15 +24,25 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.grey,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
-    return MaterialApp(
-        title: 'Flutter UI',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: AppTheme.textTheme,
-          platform: TargetPlatform.iOS,
-        ),
-        home: IndexScreen());
+    return GestureDetector(
+      onTap: () {
+        //Unfocus
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          currentFocus.focusedChild.unfocus();
+        }
+      },
+      child: MaterialApp(
+          title: 'Flutter UI',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: AppTheme.textTheme,
+            platform: TargetPlatform.iOS,
+          ),
+          home: IndexScreen()),
+    );
   }
 }
 

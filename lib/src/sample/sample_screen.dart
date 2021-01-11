@@ -1,4 +1,4 @@
-import 'package:murakube/src/ui_view/title_view.dart';
+import 'package:murakube/src/components/title_view.dart';
 import 'package:flutter/material.dart';
 
 import '../murakube_app_theme.dart';
