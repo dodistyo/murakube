@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:murakube/src/models/tabIcon_data.dart';
 import 'package:murakube/src/sample/sample_screen.dart';
@@ -23,7 +24,10 @@ class IndexScreenState extends State<IndexScreen>
   );
 
   Widget tabLogin;
-  bool loggedIn = false;
+
+  bool loggedin;
+
+  final storage = new FlutterSecureStorage();
 
   @override
   void initState() {
@@ -35,7 +39,7 @@ class IndexScreenState extends State<IndexScreen>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
     // tabBody = DashboardScreen(animationController: animationController);
-    // tabLogin = LoginScreen();
+    screen();
     super.initState();
   }
 
@@ -45,13 +49,19 @@ class IndexScreenState extends State<IndexScreen>
     super.dispose();
   }
 
-  Widget screen() {
-    if (!loggedIn) {
-      return tabBody = LoginScreen();
-    } else {
-      return tabBody =
-          DashboardScreen(animationController: animationController);
-    }
+  screen() async {
+    var token = await storage.read(key: "token");
+    setState(() {
+      if (token == "") {
+        loggedin = true;
+        tabBody = LoginScreen(
+          childActionRedirectHome: actionRedirectHome,
+        );
+      } else {
+        loggedin = false;
+        tabBody = DashboardScreen(animationController: animationController);
+      }
+    });
   }
 
   @override
@@ -62,7 +72,7 @@ class IndexScreenState extends State<IndexScreen>
           backgroundColor: Colors.transparent,
           body: Stack(
             children: <Widget>[
-              screen(),
+              tabBody,
               // bottomBar(),
             ],
           )),
@@ -75,43 +85,50 @@ class IndexScreenState extends State<IndexScreen>
   }
 
   void actionRedirectHome() async {
-    Fluttertoast.showToast(msg: "Parent method called");
+    setState(() {
+      Fluttertoast.showToast(msg: "logged in");
+      tabBody = DashboardScreen(animationController: animationController);
+    });
   }
 
-  Widget bottomBar() {
-    return Column(
-      children: <Widget>[
-        const Expanded(
-          child: SizedBox(),
-        ),
-        BottomBarView(
-          tabIconsList: tabIconsList,
-          addClick: () {},
-          changeIndex: (int index) {
-            if (index == 0) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      DashboardScreen(animationController: animationController);
+  Future<Widget> bottomBar() async {
+    if (loggedin) {
+      return Column(
+        children: <Widget>[
+          const Expanded(
+            child: SizedBox(),
+          ),
+          BottomBarView(
+            tabIconsList: tabIconsList,
+            addClick: () {},
+            changeIndex: (int index) {
+              if (index == 0) {
+                animationController.reverse().then<dynamic>((data) {
+                  if (!mounted) {
+                    return;
+                  }
+                  setState(() {
+                    tabBody = DashboardScreen(
+                        animationController: animationController);
+                  });
                 });
-              });
-            } else {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      TrainingScreen(animationController: animationController);
+              } else {
+                animationController.reverse().then<dynamic>((data) {
+                  if (!mounted) {
+                    return;
+                  }
+                  setState(() {
+                    tabBody = TrainingScreen(
+                        animationController: animationController);
+                  });
                 });
-              });
-            }
-          },
-        ),
-      ],
-    );
+              }
+            },
+          ),
+        ],
+      );
+    } else {
+      return null;
+    }
   }
 }

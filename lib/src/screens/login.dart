@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:murakube/src/index_screen.dart';
 import 'package:murakube/src/services/service_manager.dart';
 
 import '../murakube_app_theme.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key key, this.authScreen}) : super(key: key);
-  final Function authScreen;
+class LoginScreen extends StatefulWidget {
+  final Function childActionRedirectHome;
+
+  LoginScreen({Key key, this.childActionRedirectHome}) : super(key: key);
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
+
+class LoginScreenState extends State<LoginScreen> {
   final token = TextEditingController();
+  // Create storage
+  final storage = new FlutterSecureStorage();
 
   void actionLogin(payload) async {
     try {
       final res = await ServiceManager().login(payload);
-      if (res["jwtToken"] == "") {
+      if (res["jweToken"] == "") {
         Fluttertoast.showToast(msg: "Invalid token");
       } else {
-        IndexScreenState().actionRedirectHome();
+        // Write value
+        await storage.write(key: 'token', value: payload);
+        widget.childActionRedirectHome();
       }
     } catch (e) {
       // Fluttertoast.showToast(msg: "Something went wrong");
