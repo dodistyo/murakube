@@ -27,7 +27,7 @@ class IndexScreenState extends State<IndexScreen>
     children: <Widget>[],
   );
 
-  bool loggedin;
+  bool loggedin = false;
 
   final storage = new FlutterSecureStorage();
 
@@ -61,20 +61,9 @@ class IndexScreenState extends State<IndexScreen>
         tabBody = LoginScreen(
           childActionRedirectHome: actionRedirectHome,
         );
-        mainBody = Stack(
-          children: <Widget>[
-            tabBody,
-          ],
-        );
       } else {
         loggedin = true;
         tabBody = DashboardScreen(animationController: animationController);
-        mainBody = Stack(
-          children: <Widget>[
-            tabBody,
-            bottomBar(),
-          ],
-        );
       }
     });
   }
@@ -85,7 +74,18 @@ class IndexScreenState extends State<IndexScreen>
         color: MurakubeAppTheme.background,
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: mainBody,
+          body: Stack(
+            children: <Widget>[
+              tabBody,
+              (() {
+                if (loggedin) {
+                  return bottomBar();
+                } else {
+                  return Column();
+                }
+              }()),
+            ],
+          ),
         ));
   }
 
@@ -97,13 +97,14 @@ class IndexScreenState extends State<IndexScreen>
   void actionRedirectHome() async {
     setState(() {
       Fluttertoast.showToast(msg: "logged in");
+      loggedin = true;
       tabBody = DashboardScreen(animationController: animationController);
-      mainBody = Stack(
-        children: <Widget>[
-          tabBody,
-          bottomBar(),
-        ],
-      );
+      // mainBody = Stack(
+      //   children: <Widget>[
+      //     tabBody,
+      //     bottomBar(),
+      //   ],
+      // );
     });
   }
 
