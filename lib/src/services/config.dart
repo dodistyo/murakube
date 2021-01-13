@@ -10,7 +10,11 @@ class Config {
   // Read value
   Future<String> getToken() async {
     String value = await storage.read(key: "token");
-    return value;
+    if (value != "" || value != null) {
+      return value;
+    } else {
+      return "notoken";
+    }
   }
 
   String get apiURL {

@@ -23,7 +23,9 @@ class IndexScreenState extends State<IndexScreen>
     color: MurakubeAppTheme.background,
   );
 
-  Widget tabLogin;
+  Widget mainBody = Stack(
+    children: <Widget>[],
+  );
 
   bool loggedin;
 
@@ -50,16 +52,29 @@ class IndexScreenState extends State<IndexScreen>
   }
 
   screen() async {
+    // await storage.delete(key: "token");
     var token = await storage.read(key: "token");
     setState(() {
-      if (token == "") {
-        loggedin = true;
+      if (token == "" || token == null) {
+        print("here");
+        loggedin = false;
         tabBody = LoginScreen(
           childActionRedirectHome: actionRedirectHome,
         );
+        mainBody = Stack(
+          children: <Widget>[
+            tabBody,
+          ],
+        );
       } else {
-        loggedin = false;
+        loggedin = true;
         tabBody = DashboardScreen(animationController: animationController);
+        mainBody = Stack(
+          children: <Widget>[
+            tabBody,
+            bottomBar(),
+          ],
+        );
       }
     });
   }
@@ -67,16 +82,11 @@ class IndexScreenState extends State<IndexScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: MurakubeAppTheme.background,
-      child: Scaffold(
+        color: MurakubeAppTheme.background,
+        child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Stack(
-            children: <Widget>[
-              tabBody,
-              // bottomBar(),
-            ],
-          )),
-    );
+          body: mainBody,
+        ));
   }
 
   Future<bool> getData() async {
@@ -88,47 +98,49 @@ class IndexScreenState extends State<IndexScreen>
     setState(() {
       Fluttertoast.showToast(msg: "logged in");
       tabBody = DashboardScreen(animationController: animationController);
+      mainBody = Stack(
+        children: <Widget>[
+          tabBody,
+          bottomBar(),
+        ],
+      );
     });
   }
 
-  Future<Widget> bottomBar() async {
-    if (loggedin) {
-      return Column(
-        children: <Widget>[
-          const Expanded(
-            child: SizedBox(),
-          ),
-          BottomBarView(
-            tabIconsList: tabIconsList,
-            addClick: () {},
-            changeIndex: (int index) {
-              if (index == 0) {
-                animationController.reverse().then<dynamic>((data) {
-                  if (!mounted) {
-                    return;
-                  }
-                  setState(() {
-                    tabBody = DashboardScreen(
-                        animationController: animationController);
-                  });
+  Widget bottomBar() {
+    return Column(
+      children: <Widget>[
+        const Expanded(
+          child: SizedBox(),
+        ),
+        BottomBarView(
+          tabIconsList: tabIconsList,
+          addClick: () {},
+          changeIndex: (int index) {
+            if (index == 0) {
+              animationController.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody =
+                      DashboardScreen(animationController: animationController);
                 });
-              } else {
-                animationController.reverse().then<dynamic>((data) {
-                  if (!mounted) {
-                    return;
-                  }
-                  setState(() {
-                    tabBody = TrainingScreen(
-                        animationController: animationController);
-                  });
+              });
+            } else {
+              animationController.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody =
+                      TrainingScreen(animationController: animationController);
                 });
-              }
-            },
-          ),
-        ],
-      );
-    } else {
-      return null;
-    }
+              });
+            }
+          },
+        ),
+      ],
+    );
   }
 }
