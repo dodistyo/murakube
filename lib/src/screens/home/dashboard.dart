@@ -31,31 +31,32 @@ class _DashboardScreenState extends State<DashboardScreen>
             parent: widget.animationController,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
     addAllListData();
-
-    scrollController.addListener(() {
-      if (scrollController.offset >= 24) {
-        if (topBarOpacity != 1.0) {
-          setState(() {
-            topBarOpacity = 1.0;
-            k8sTextColor = MurakubeAppTheme.white;
-          });
-        }
-      } else if (scrollController.offset <= 24 &&
-          scrollController.offset >= 0) {
-        if (topBarOpacity != scrollController.offset / 24) {
-          setState(() {
-            topBarOpacity = scrollController.offset / 24;
-          });
-        }
-      } else if (scrollController.offset <= 0) {
-        if (topBarOpacity != 0.0) {
-          setState(() {
-            topBarOpacity = 0.0;
-            k8sTextColor = MurakubeAppTheme.k8sBase;
-          });
-        }
-      }
-    });
+    topBarOpacity = 1.0;
+    k8sTextColor = MurakubeAppTheme.white;
+    // scrollController.addListener(() {
+    //   if (scrollController.offset >= 24) {
+    //     if (topBarOpacity != 1.0) {
+    //       setState(() {
+    //         topBarOpacity = 1.0;
+    //         k8sTextColor = MurakubeAppTheme.white;
+    //       });
+    //     }
+    //   } else if (scrollController.offset <= 24 &&
+    //       scrollController.offset >= 0) {
+    //     if (topBarOpacity != scrollController.offset / 24) {
+    //       setState(() {
+    //         topBarOpacity = scrollController.offset / 24;
+    //       });
+    //     }
+    //   } else if (scrollController.offset <= 0) {
+    //     if (topBarOpacity != 0.0) {
+    //       setState(() {
+    //         topBarOpacity = 0.0;
+    //         k8sTextColor = MurakubeAppTheme.k8sBase;
+    //       });
+    //     }
+    //   }
+    // });
     super.initState();
   }
 
@@ -95,8 +96,8 @@ class _DashboardScreenState extends State<DashboardScreen>
         body: Stack(
           children: <Widget>[
             getMainListViewUI(),
-            getAppBarUI(widget.animationController, topBarAnimation,
-                topBarOpacity, k8sTextColor),
+            // getAppBarUI(widget.animationController, topBarAnimation,
+            //     topBarOpacity, k8sTextColor),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
             )

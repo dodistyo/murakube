@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:murakube/src/models/tabIcon_data.dart';
+import 'package:murakube/src/navigation_view/top_bar_view.dart';
 import 'package:murakube/src/sample/sample_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:murakube/src/screens/login.dart';
@@ -82,6 +83,15 @@ class IndexScreenState extends State<IndexScreen>
                 tabBody,
                 (() {
                   if (loggedin) {
+                    return TopBar(
+                      childActionLogout: actionLogout,
+                    );
+                  } else {
+                    return Column();
+                  }
+                }()),
+                (() {
+                  if (loggedin) {
                     return bottomBar();
                   } else {
                     return Column();
@@ -109,6 +119,16 @@ class IndexScreenState extends State<IndexScreen>
       //     bottomBar(),
       //   ],
       // );
+    });
+  }
+
+  void actionLogout() {
+    setState(() {
+      Fluttertoast.showToast(msg: "logged out");
+      loggedin = false;
+      tabBody = LoginScreen(
+        childActionRedirectHome: actionRedirectHome,
+      );
     });
   }
 
