@@ -122,7 +122,9 @@ class IndexScreenState extends State<IndexScreen>
     });
   }
 
-  void actionLogout() {
+  void actionLogout() async {
+    await storage.write(key: "dashboardHostname", value: "");
+    await storage.write(key: "token", value: "");
     setState(() {
       Fluttertoast.showToast(msg: "logged out");
       loggedin = false;

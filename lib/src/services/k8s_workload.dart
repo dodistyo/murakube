@@ -8,7 +8,6 @@ import 'dart:async';
 import 'config.dart';
 
 class Workload {
-  final String apiURL = Config().apiURL;
   final String namespace = Config().defaultNamespace;
   final HttpClient client = new HttpClient()
     ..badCertificateCallback = ((X509Certificate cert, String host, int port) =>
@@ -19,9 +18,13 @@ class Workload {
     ioClient = new IOClient(client);
   }
   // End Of Constructor
+  getApiURL() async {
+    return await Config().apiURL();
+  }
 
   //Get Deployment from API
   Future<Deployment> fetchDeployment() async {
+    var apiURL = await getApiURL();
     http.Response resp = await ioClient.get(apiURL + '/deployment/' + namespace,
         headers: await Config().baseHeaders());
     final json = jsonDecode(resp.body);
@@ -31,6 +34,7 @@ class Workload {
 
   //Get Statefulset from API
   Future<Statefulset> fetchStatefulset() async {
+    var apiURL = await getApiURL();
     http.Response resp = await ioClient.get(
         apiURL + '/statefulset/' + namespace,
         headers: await Config().baseHeaders());

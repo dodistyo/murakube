@@ -5,8 +5,8 @@ import 'k8s_workload.dart';
 import 'auth.dart';
 
 class ServiceManager {
-  Future login(payload) async {
-    return await Auth().login(payload);
+  Future login(dashboardHostname, payload) async {
+    return await Auth().login(dashboardHostname, payload);
   }
 
   Future<Deployment> getDeployment() async {

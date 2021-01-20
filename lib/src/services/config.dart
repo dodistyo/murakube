@@ -1,7 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Config {
-  final String apiEndpoint = "https://k8s.unsircle.id";
   final String apiPrefix = "/api/v1";
   final String defaultNamespace = "production";
   // Create storage
@@ -17,8 +16,9 @@ class Config {
     }
   }
 
-  String get apiURL {
-    return apiEndpoint + apiPrefix;
+  Future<String> apiURL() async {
+    var apiURL = await storage.read(key: "dashboardHostname");
+    return apiURL + apiPrefix;
   }
 
   Future<Map<String, String>> baseHeaders() async {

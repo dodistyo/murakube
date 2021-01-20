@@ -15,23 +15,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final token = TextEditingController();
+  TextEditingController dashboardHostname = TextEditingController();
+  TextEditingController token = TextEditingController();
   // Create storage
   final storage = new FlutterSecureStorage();
 
-  void actionLogin(payload) async {
-    try {
-      final res = await ServiceManager().login(payload);
-      if (res["jweToken"] == "") {
-        Fluttertoast.showToast(msg: "Invalid token");
-      } else {
-        // Write value
-        await storage.write(key: 'token', value: payload);
-        widget.childActionRedirectHome();
+  void actionLogin(dashboardHostname, payload) async {
+    if (dashboardHostname == "" && payload == "") {
+      Fluttertoast.showToast(msg: "Fill all the required field !");
+    } else {
+      try {
+        await storage.write(key: 'dashboardHostname', value: dashboardHostname);
+        var apiURL = await storage.read(key: "dashboardHostname");
+
+        final res = await ServiceManager().login(apiURL, payload);
+        if (res["jweToken"] == "") {
+          Fluttertoast.showToast(msg: "Invalid token");
+        } else {
+          // Write value
+          await storage.write(key: 'token', value: payload);
+          widget.childActionRedirectHome();
+        }
+      } catch (e) {
+        Fluttertoast.showToast(msg: "Something went wrong");
+        print('something went wrong');
       }
-    } catch (e) {
-      // Fluttertoast.showToast(msg: "Something went wrong");
-      print('something went wrong');
     }
   }
 
@@ -92,10 +100,31 @@ class LoginScreenState extends State<LoginScreen> {
                                     fontSize: 12,
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 32),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 12),
+                                TextField(
+                                    controller: dashboardHostname,
+                                    decoration: InputDecoration(
+                                        labelText: "Dashboard hostname *",
+                                        hintText: "https://k8s.dashboard.com")),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 32),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 12),
                                 TextField(
                                     controller: token,
                                     decoration:
-                                        InputDecoration(labelText: "Token")),
+                                        InputDecoration(labelText: "Token *")),
                               ],
                             ),
                           ),
@@ -106,7 +135,7 @@ class LoginScreenState extends State<LoginScreen> {
                               //     borderRadius: BorderRadius.circular(50)),
                               child: Text("Sign in"),
                               onPressed: () {
-                                actionLogin(token.text);
+                                actionLogin(dashboardHostname.text, token.text);
                               },
                               color: MurakubeAppTheme.k8sBase,
                               textColor: Colors.white,
