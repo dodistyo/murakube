@@ -42,7 +42,6 @@ class IndexScreenState extends State<IndexScreen>
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
-    // tabBody = DashboardScreen(animationController: animationController);
     screen();
     super.initState();
   }
@@ -58,7 +57,6 @@ class IndexScreenState extends State<IndexScreen>
     var token = await storage.read(key: "token");
     setState(() {
       if (token == "" || token == null) {
-        print("here");
         loggedin = false;
         tabBody = LoginScreen(
           childActionRedirectHome: actionRedirectHome,
@@ -113,12 +111,6 @@ class IndexScreenState extends State<IndexScreen>
       Fluttertoast.showToast(msg: "logged in");
       loggedin = true;
       tabBody = DashboardScreen(animationController: animationController);
-      // mainBody = Stack(
-      //   children: <Widget>[
-      //     tabBody,
-      //     bottomBar(),
-      //   ],
-      // );
     });
   }
 

@@ -19,7 +19,7 @@ class TopBarState extends State<TopBar> {
     return Column(
       children: <Widget>[
         Container(
-          height: 82,
+          height: MediaQuery.of(context).size.height / 8.8,
           decoration: BoxDecoration(
             color: MurakubeAppTheme.k8sBase.withOpacity(1.0),
             borderRadius: const BorderRadius.only(
@@ -130,7 +130,7 @@ class TopBarState extends State<TopBar> {
                         highlightColor: Colors.transparent,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(32.0)),
-                        onTap: widget.childActionLogout,
+                        onTap: _confirmLogout,
                         child: Center(
                           child: Icon(
                             Icons.exit_to_app,
@@ -147,5 +147,32 @@ class TopBarState extends State<TopBar> {
         ),
       ],
     );
+  }
+
+  Future<bool> _confirmLogout() {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Confirm Logout?',
+                style: new TextStyle(color: Colors.black, fontSize: 20.0)),
+            content: new Text(
+                'Are you sure you want to logout? Tap \'Yes\' to logout \'No\' to cancel.'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  widget.childActionLogout();
+                },
+                child: new Text('Yes', style: new TextStyle(fontSize: 18.0)),
+              ),
+              new FlatButton(
+                onPressed: () =>
+                    Navigator.pop(context), // this line dismisses the dialog
+                child: new Text('No', style: new TextStyle(fontSize: 18.0)),
+              )
+            ],
+          ),
+        ) ??
+        false;
   }
 }

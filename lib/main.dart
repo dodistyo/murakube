@@ -3,6 +3,8 @@ import 'package:murakube/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:murakube/src/index_screen.dart';
+import 'package:murakube/src/murakube_app_theme.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +43,21 @@ class MyApp extends StatelessWidget {
             textTheme: AppTheme.textTheme,
             platform: TargetPlatform.iOS,
           ),
-          home: IndexScreen()),
+          home: new SplashScreen(
+              seconds: 2,
+              navigateAfterSeconds: new IndexScreen(),
+              // title: new Text(
+              //   'Welcome In SplashScreen',
+              //   style:
+              //       new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              // ),
+              image: new Image.asset('assets/wheel.png'),
+              backgroundColor: Colors.white,
+              styleTextUnderTheLoader: new TextStyle(),
+              photoSize: 100.0,
+              // useLoader: false,
+              // onClick: () => print("Flutter Splash"),
+              loaderColor: MurakubeAppTheme.k8sBase)),
     );
   }
 }

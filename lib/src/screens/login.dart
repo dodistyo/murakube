@@ -49,103 +49,108 @@ class LoginScreenState extends State<LoginScreen> {
         color: MurakubeAppTheme.background,
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Stack(
-            children: <Widget>[
-              //SET CONTAINER SEBAGAI BACKGROUND
-              Container(
-                height: MediaQuery.of(context).size.height,
-              ),
-              //BAGIAN INI KITA GUNAKAN POSITIONED UNTUK MENGATUR SUDUTNYA, JIKA MASIH BINGUNG SOAL MATERI INI BACA NOTE DIBAWAH.
-              Positioned(
-                //JARAK DARI ATAS KITA AMBIL DARI HEIGHT DIBAGI 3.6
-                top: MediaQuery.of(context).size.height / 3.6,
-                //ISINYA ADALAH CONTAINER YANG WIDTHNYA SELEBAR MUNGKIN
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  // decoration: BoxDecoration(color: MurakubeAppTheme.k8sBase),
-                  child: Card(
-                    //LALU CARD KITA SET MARGINNYA 20 DARI CONTAINER
-                    margin: const EdgeInsets.all(20.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    elevation: 6, //KETEBALANNYA
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                                color: MurakubeAppTheme.k8sBase,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15.0),
-                                    topLeft: Radius.circular(15.0))),
-                            width: double.maxFinite,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            child: Text(
-                              "Murakube Dashboard",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(height: 12),
-                                Text(
-                                  "Every Service Account has a Secret with valid Bearer Token that can be used to log in to Dashboard. To find out more about how to configure and use Bearer Tokens, please refer to the Authentication section.",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(height: 12),
-                                TextField(
-                                    controller: dashboardHostname,
-                                    decoration: InputDecoration(
-                                        labelText: "Dashboard hostname *",
-                                        hintText: "https://k8s.dashboard.com")),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(height: 12),
-                                TextField(
-                                    controller: token,
-                                    decoration:
-                                        InputDecoration(labelText: "Token *")),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 12),
-                            child: RaisedButton(
-                              // shape: RoundedRectangleBorder(
-                              //     borderRadius: BorderRadius.circular(50)),
-                              child: Text("Sign in"),
-                              onPressed: () {
-                                actionLogin(dashboardHostname.text, token.text);
-                              },
-                              color: MurakubeAppTheme.k8sBase,
-                              textColor: Colors.white,
-                            ),
-                          )
-                        ]),
-                  ),
+          body: SingleChildScrollView(
+            child: Stack(
+              children: <Widget>[
+                //SET CONTAINER SEBAGAI BACKGROUND
+                Container(
+                  height: MediaQuery.of(context).size.height,
                 ),
-              )
-            ],
+                //BAGIAN INI KITA GUNAKAN POSITIONED UNTUK MENGATUR SUDUTNYA, JIKA MASIH BINGUNG SOAL MATERI INI BACA NOTE DIBAWAH.
+                Positioned(
+                  //JARAK DARI ATAS KITA AMBIL DARI HEIGHT DIBAGI 3.6
+                  // top: base_position,
+                  top: MediaQuery.of(context).size.height / 5,
+                  //ISINYA ADALAH CONTAINER YANG WIDTHNYA SELEBAR MUNGKIN
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    // decoration: BoxDecoration(color: MurakubeAppTheme.k8sBase),
+                    child: Card(
+                      //LALU CARD KITA SET MARGINNYA 20 DARI CONTAINER
+                      margin: const EdgeInsets.all(20.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 6, //KETEBALANNYA
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: MurakubeAppTheme.k8sBase,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(15.0),
+                                      topLeft: Radius.circular(15.0))),
+                              width: double.maxFinite,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Text(
+                                "Murakube Dashboard",
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 12),
+                                  Text(
+                                    "Every Service Account has a Secret with valid Bearer Token that can be used to log in to Dashboard. To find out more about how to configure and use Bearer Tokens, please refer to the Authentication section.",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 12),
+                                  TextField(
+                                      controller: dashboardHostname,
+                                      decoration: InputDecoration(
+                                          labelText: "Dashboard hostname *",
+                                          hintText:
+                                              "https://k8s.dashboard.com")),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 12),
+                                  TextField(
+                                      controller: token,
+                                      decoration: InputDecoration(
+                                          labelText: "Token *")),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              child: RaisedButton(
+                                // shape: RoundedRectangleBorder(
+                                //     borderRadius: BorderRadius.circular(50)),
+                                child: Text("Sign in"),
+                                onPressed: () {
+                                  actionLogin(
+                                      dashboardHostname.text, token.text);
+                                },
+                                color: MurakubeAppTheme.k8sBase,
+                                textColor: Colors.white,
+                              ),
+                            )
+                          ]),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
