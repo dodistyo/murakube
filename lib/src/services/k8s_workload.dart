@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:murakube/src/models/workload/deployment.dart';
+import 'package:murakube/src/models/workload/pod.dart';
+import 'package:murakube/src/models/workload/replicaset.dart';
 import 'package:murakube/src/models/workload/statfulset.dart';
 import 'dart:async';
 import 'config.dart';
@@ -40,6 +42,26 @@ class Workload {
         headers: await Config().baseHeaders());
     final json = jsonDecode(resp.body);
     final res = Statefulset.fromJson(json);
+    return res;
+  }
+
+  //Get Pod from API
+  Future<Pod> fetchPod() async {
+    var apiURL = await getApiURL();
+    http.Response resp = await ioClient.get(apiURL + '/pod/' + namespace,
+        headers: await Config().baseHeaders());
+    final json = jsonDecode(resp.body);
+    final res = Pod.fromJson(json);
+    return res;
+  }
+
+  //Get Replicaset from API
+  Future<Replicaset> fetchReplicaset() async {
+    var apiURL = await getApiURL();
+    http.Response resp = await ioClient.get(apiURL + '/replicaset/' + namespace,
+        headers: await Config().baseHeaders());
+    final json = jsonDecode(resp.body);
+    final res = Replicaset.fromJson(json);
     return res;
   }
 }

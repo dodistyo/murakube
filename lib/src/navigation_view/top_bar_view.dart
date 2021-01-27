@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:murakube/src/index_screen.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +15,14 @@ class TopBarState extends State<TopBar> {
   final k8sTextColor = MurakubeAppTheme.white;
   @override
   Widget build(BuildContext context) {
+    var padding = MediaQuery.of(context).padding;
     return Column(
       children: <Widget>[
         Container(
-          height: MediaQuery.of(context).size.height / 8.8,
+          height: (MediaQuery.of(context).size.height -
+                  padding.top -
+                  kToolbarHeight) /
+              8.0,
           decoration: BoxDecoration(
             color: MurakubeAppTheme.k8sBase.withOpacity(1.0),
             borderRadius: const BorderRadius.only(
@@ -41,14 +44,14 @@ class TopBarState extends State<TopBar> {
                 padding: EdgeInsets.only(
                     left: 16,
                     right: 16,
-                    top: 16 - 8.0 * topBarOpacity,
-                    bottom: 16 - 8.0 * topBarOpacity),
+                    top: 14 - 8.0 * topBarOpacity,
+                    bottom: 14 - 8.0 * topBarOpacity),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(6.0),
                         child: Text(
                           'murakube',
                           textAlign: TextAlign.left,

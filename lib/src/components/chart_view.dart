@@ -1,5 +1,7 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:murakube/src/models/workload/deployment.dart';
+import 'package:murakube/src/models/workload/pod.dart';
+import 'package:murakube/src/models/workload/replicaset.dart';
 import 'package:murakube/src/models/workload/statfulset.dart';
 import 'package:murakube/src/murakube_app_theme.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +13,16 @@ class PieChartState extends State<ChartView> {
   final int count = 9;
   Future<Deployment> _futureDeployment;
   Future<Statefulset> _futureStatefulset;
+  Future<Pod> _futurePod;
+  Future<Replicaset> _futureReplicaset;
 
   refreshDashboard() {
     Fluttertoast.showToast(msg: "Refreshed");
     setState(() {
       _futureDeployment = ServiceManager().getDeployment();
       _futureStatefulset = ServiceManager().getStatefulset();
+      _futureReplicaset = ServiceManager().getReplicaset();
+      _futurePod = ServiceManager().getPod();
     });
   }
 
@@ -24,6 +30,8 @@ class PieChartState extends State<ChartView> {
   void initState() {
     _futureDeployment = ServiceManager().getDeployment();
     _futureStatefulset = ServiceManager().getStatefulset();
+    _futureReplicaset = ServiceManager().getReplicaset();
+    _futurePod = ServiceManager().getPod();
     super.initState();
   }
 
@@ -227,6 +235,146 @@ class PieChartState extends State<ChartView> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 0, left: 16, right: 16, bottom: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                              child: Column(children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                height: 200,
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: FutureBuilder(
+                                    future: _futurePod,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return PieChart(
+                                          PieChartData(
+                                              pieTouchData: PieTouchData(
+                                                  touchCallback:
+                                                      (pieTouchResponse) {
+                                                setState(() {
+                                                  if (pieTouchResponse
+                                                              .touchInput
+                                                          is FlLongPressEnd ||
+                                                      pieTouchResponse
+                                                              .touchInput
+                                                          is FlPanEnd) {
+                                                    touchedIndex = -1;
+                                                  } else {
+                                                    touchedIndex =
+                                                        pieTouchResponse
+                                                            .touchedSectionIndex;
+                                                  }
+                                                });
+                                              }),
+                                              startDegreeOffset: 270,
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              sectionsSpace: 0,
+                                              centerSpaceRadius: 0,
+                                              sections: showingSectionsPod(
+                                                  snapshot.data)),
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                "Pod",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: MurakubeAppTheme.fontName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  letterSpacing: 0.5,
+                                  color: MurakubeAppTheme.lightText,
+                                ),
+                              ),
+                            ),
+                          ])),
+                          Expanded(
+                              child: Column(children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                height: 200,
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: FutureBuilder(
+                                    future: _futureReplicaset,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return PieChart(
+                                          PieChartData(
+                                              pieTouchData: PieTouchData(
+                                                  touchCallback:
+                                                      (pieTouchResponse) {
+                                                setState(() {
+                                                  if (pieTouchResponse
+                                                              .touchInput
+                                                          is FlLongPressEnd ||
+                                                      pieTouchResponse
+                                                              .touchInput
+                                                          is FlPanEnd) {
+                                                    touchedIndex = -1;
+                                                  } else {
+                                                    touchedIndex =
+                                                        pieTouchResponse
+                                                            .touchedSectionIndex;
+                                                  }
+                                                });
+                                              }),
+                                              startDegreeOffset: 270,
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              sectionsSpace: 0,
+                                              centerSpaceRadius: 0,
+                                              sections:
+                                                  showingSectionsReplicaset(
+                                                      snapshot.data)),
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                "Replicaset",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: MurakubeAppTheme.fontName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  letterSpacing: 0.5,
+                                  color: MurakubeAppTheme.lightText,
+                                ),
+                              ),
+                            ),
+                          ])),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -303,6 +451,84 @@ class PieChartState extends State<ChartView> {
             value: statefulset.status.running,
             title: (statefulset.status.running > 0)
                 ? statefulset.status.running.toInt().toString()
+                : '',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        default:
+          return null;
+      }
+    });
+  }
+
+  List<PieChartSectionData> showingSectionsPod(Pod pod) {
+    return List.generate(2, (i) {
+      final isTouched = i == touchedIndex;
+      final double fontSize = isTouched ? 20 : 16;
+      final double radius = isTouched ? 110 : 100;
+
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: Colors.red,
+            value: pod.status.failed,
+            title: (pod.status.failed > 0)
+                ? pod.status.failed.toInt().toString()
+                : '',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: const Color(0xff00C752),
+            value: pod.status.running,
+            title: (pod.status.running > 0)
+                ? pod.status.running.toInt().toString()
+                : '',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        default:
+          return null;
+      }
+    });
+  }
+
+  List<PieChartSectionData> showingSectionsReplicaset(Replicaset replicaset) {
+    return List.generate(2, (i) {
+      final isTouched = i == touchedIndex;
+      final double fontSize = isTouched ? 20 : 16;
+      final double radius = isTouched ? 110 : 100;
+
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: Colors.red,
+            value: replicaset.status.failed,
+            title: (replicaset.status.failed > 0)
+                ? replicaset.status.failed.toInt().toString()
+                : '',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: const Color(0xff00C752),
+            value: replicaset.status.running,
+            title: (replicaset.status.running > 0)
+                ? replicaset.status.running.toInt().toString()
                 : '',
             radius: radius,
             titleStyle: TextStyle(
